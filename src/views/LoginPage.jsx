@@ -1,7 +1,11 @@
 import FullPageLoader from '../components/FullPageLoader.jsx';
 import { useState } from 'react';
 import { auth } from '../firebase/config.js';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword
+  } from "firebase/auth";
 
 
 function LoginPage() {
@@ -31,19 +35,25 @@ function LoginPage() {
       });
   }
 
-  function handleLogin(e){
+  function handleLogin(e) {
     setError("")
     e.preventDefault();
 
     signInWithEmailAndPassword(auth, useCredential.email, useCredential.password)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    // ...
-  })
-  .catch((error) => {
-    setError(error.message);
-  });
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  }
+
+  function handlePasswordMissed() {
+    const email = prompt("Please, enter your email:")
+    sendPasswordResetEmail(auth, email)
+    alert("Email sent! Check your inbox.")
   }
 
 
@@ -91,7 +101,7 @@ function LoginPage() {
             }
 
 
-            <p className="forgot-password">Forgot Password?</p>
+            <p onClick={handlePasswordMissed} className="forgot-password">Forgot Password?</p>
 
           </form>
         </section>
