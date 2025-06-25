@@ -7,31 +7,26 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginType, setLoginType] = useState('login');
+  const [error, setError] = useState('');
 
   const [useCredential, setUseCredential] = useState({});
 
   function handleCredentials(e) {
     setUseCredential({ ...useCredential, [e.target.name]: e.target.value })
-    console.log(useCredential)
   }
 
   function handleSignup(e) {
+    setError("")
     e.preventDefault();
 
     createUserWithEmailAndPassword(auth, useCredential.email, useCredential.password)
       .then((userCredential) => {
         // Signed up 
         const user = userCredential.user;
-
-        console.log(user)
         // ...
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-        console.log(errorCode)
-        console.log(errorMessage)
+        setError(error.message);
         // ..
       });
   }
@@ -72,6 +67,14 @@ function LoginPage() {
                 :
                 <button onClick={(e) => handleSignup(e)} className="active btn btn-block">Sign Up</button>
             }
+
+            {
+              error &&
+              <div className="error">
+                {error}
+              </div>
+            }
+
 
             <p className="forgot-password">Forgot Password?</p>
 
