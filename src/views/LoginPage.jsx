@@ -1,7 +1,7 @@
 import FullPageLoader from '../components/FullPageLoader.jsx';
 import { useState } from 'react';
 import { auth } from '../firebase/config.js';
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
 
 
 function LoginPage() {
@@ -29,6 +29,21 @@ function LoginPage() {
         setError(error.message);
         // ..
       });
+  }
+
+  function handleLogin(e){
+    setError("")
+    e.preventDefault();
+
+    signInWithEmailAndPassword(auth, useCredential.email, useCredential.password)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+    setError(error.message);
+  });
   }
 
 
@@ -63,7 +78,7 @@ function LoginPage() {
             </div>
             {
               loginType == 'login' ?
-                <button className="active btn btn-block">Login</button>
+                <button onClick={(e) => handleLogin(e)} className="active btn btn-block">Login</button>
                 :
                 <button onClick={(e) => handleSignup(e)} className="active btn btn-block">Sign Up</button>
             }
