@@ -12,7 +12,7 @@ import {
 
 
 function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [loginType, setLoginType] = useState('login');
   const [error, setError] = useState('');
   const [useCredential, setUseCredential] = useState({});
@@ -25,6 +25,7 @@ function LoginPage() {
     } else {
       dispatch(setUser(null));
     }
+    if (isLoading) { setIsLoading(false); }
   });
 
   function handleCredentials(e) {
