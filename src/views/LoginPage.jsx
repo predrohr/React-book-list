@@ -1,22 +1,31 @@
 import FullPageLoader from '../components/FullPageLoader.jsx';
 import { useState } from 'react';
 import { auth } from '../firebase/config.js';
-import {useDispatch} from 'react-redux';
-import {setUser} from '../store/userSlice.js';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../store/userSlice.js';
 import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
-  signInWithEmailAndPassword
-  } from "firebase/auth";
+  signInWithEmailAndPassword,
+  getAuth, onAuthStateChanged,
+} from "firebase/auth";
 
 
 function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginType, setLoginType] = useState('login');
   const [error, setError] = useState('');
-
   const [useCredential, setUseCredential] = useState({});
   const dispatch = useDispatch();
+
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      dispatch(setUser({ id: user.uid, email: user.email }));
+    } else {
+      dispatch(setUser(null));
+    }
+  });
 
   function handleCredentials(e) {
     setUseCredential({ ...useCredential, [e.target.name]: e.target.value })
@@ -28,7 +37,7 @@ function LoginPage() {
 
     createUserWithEmailAndPassword(auth, useCredential.email, useCredential.password)
       .then((userCredential) => {
-        dispatch(setUser({id: userCredential.user.uid, email: userCredential.user.email}));
+        dispatch(setUser({ id: userCredential.user.uid, email: userCredential.user.email }));
       })
       .catch((error) => {
         setError(error.message);
@@ -42,7 +51,7 @@ function LoginPage() {
 
     signInWithEmailAndPassword(auth, useCredential.email, useCredential.password)
       .then((userCredential) => {
-       dispatch(setUser({id: userCredential.user.uid, email: userCredential.user.email}));
+        dispatch(setUser({ id: userCredential.user.uid, email: userCredential.user.email }));
       })
       .catch((error) => {
         setError(error.message);
@@ -54,6 +63,8 @@ function LoginPage() {
     sendPasswordResetEmail(auth, email)
     alert("Email sent! Check your inbox.")
   }
+
+
 
 
   return (
