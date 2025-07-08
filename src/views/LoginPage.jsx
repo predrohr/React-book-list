@@ -1,6 +1,8 @@
 import FullPageLoader from '../components/FullPageLoader.jsx';
 import { useState } from 'react';
 import { auth } from '../firebase/config.js';
+import {useDispatch} from 'react-redux';
+import {setUser} from '../store/userSlice.js';
 import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
@@ -14,6 +16,7 @@ function LoginPage() {
   const [error, setError] = useState('');
 
   const [useCredential, setUseCredential] = useState({});
+  const dispatch = useDispatch();
 
   function handleCredentials(e) {
     setUseCredential({ ...useCredential, [e.target.name]: e.target.value })
@@ -25,9 +28,7 @@ function LoginPage() {
 
     createUserWithEmailAndPassword(auth, useCredential.email, useCredential.password)
       .then((userCredential) => {
-        // Signed up 
-        const user = userCredential.user;
-        // ...
+        dispatch(setUser({id: userCredential.user.uid, email: userCredential.user.email}));
       })
       .catch((error) => {
         setError(error.message);
@@ -41,9 +42,7 @@ function LoginPage() {
 
     signInWithEmailAndPassword(auth, useCredential.email, useCredential.password)
       .then((userCredential) => {
-        // Signed in 
-        const user = userCredential.user;
-        // ...
+       dispatch(setUser({id: userCredential.user.uid, email: userCredential.user.email}));
       })
       .catch((error) => {
         setError(error.message);
