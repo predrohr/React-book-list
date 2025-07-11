@@ -18,7 +18,6 @@ function LoginPage() {
   const [useCredential, setUseCredential] = useState({});
   const dispatch = useDispatch();
 
-  const auth = getAuth();
   onAuthStateChanged(auth, (user) => {
     if (user) {
       dispatch(setUser({ id: user.uid, email: user.email }));
