@@ -1,33 +1,24 @@
 import Book from '../components/Book.jsx';
 import Header from '../components/Header.jsx';
-import { useSelector } from 'react-redux';
-import { selectBooks } from '../store/booksSlice.js';
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from '../firebase/config.js';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectBooks, fetchBooks } from '../store/booksSlice.js';
 import { useEffect, useState } from 'react';
 
 function BooksPage() {
 
-  //const books = useSelector(selectBooks);
-  const [books, setBooks] = useState([]);
+  const dispatch = useDispatch();
+  console.log(uid);
+  const books = useSelector(selectBooks).books;
   const pageTitle = "📖 Book List with Router, Redux & Firebase";
 
-  useEffect(() => {
+  const bookStatus = useSelector(selectBooks).status;
 
-    const fetchBooks = async () => {
-      const q = query(collection(db, "books"));
-      const querySnapshot = await getDocs(q);
-      let bookList = [];
-      querySnapshot.forEach((doc) => {
-        bookList.push({id: doc.id, ...doc.data()})
-      });
-      setBooks(bookList);
+  useEffect(() => {
+    if (bookStatus == 'idle') {
+      dispatch(fetchBooks());
     }
 
-    fetchBooks();
-  })
-
-
+  }, []);
 
   return (
     <>
