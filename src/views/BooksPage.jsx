@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 function BooksPage() {
 
   const dispatch = useDispatch();
-  console.log(uid);
   const books = useSelector(selectBooks).books;
   const pageTitle = "📖 Book List with Router, Redux & Firebase";
 
