@@ -30,7 +30,7 @@ export const booksSlice = createSlice({
       })
       .addCase(toggleRead.fulfilled, (state, action) => {
         state.books.map(book => {
-          if (book.id == action.payload){
+          if (book.id == action.payload) {
             book.isRead = !book.isRead;
           }
         })
@@ -40,7 +40,7 @@ export const booksSlice = createSlice({
         console.log(action.error.message)
       })
       .addCase(eraseBook.fulfilled, (state, action) => {
-        state.books = state.books.filter(book => book.id =! action.payload)
+        state.books = state.books.filter(book => book.id = !action.payload)
       })
       .addCase(eraseBook.rejected, (state, action) => {
         state.status = 'failed'
